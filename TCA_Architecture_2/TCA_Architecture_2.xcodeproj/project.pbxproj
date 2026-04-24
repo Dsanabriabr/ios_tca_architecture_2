@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E00C16412F9C236200D0693A /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = E00C16402F9C236200D0693A /* ComposableArchitecture */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		E02CC4342F9C1E26009C9A2A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E00C16412F9C236200D0693A /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +77,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E00C163F2F9C236200D0693A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E02CC41D2F9C1E25009C9A2A = {
 			isa = PBXGroup;
 			children = (
 				E02CC4282F9C1E25009C9A2A /* TCA_Architecture_2 */,
 				E02CC4362F9C1E26009C9A2A /* TCA_Architecture_2Tests */,
 				E02CC4402F9C1E26009C9A2A /* TCA_Architecture_2UITests */,
+				E00C163F2F9C236200D0693A /* Frameworks */,
 				E02CC4272F9C1E25009C9A2A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +125,7 @@
 			);
 			name = TCA_Architecture_2;
 			packageProductDependencies = (
+				E00C16402F9C236200D0693A /* ComposableArchitecture */,
 			);
 			productName = TCA_Architecture_2;
 			productReference = E02CC4262F9C1E25009C9A2A /* TCA_Architecture_2.app */;
@@ -629,6 +643,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E00C16402F9C236200D0693A /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E02CC4532F9C1F30009C9A2A /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E02CC41E2F9C1E25009C9A2A /* Project object */;
 }
