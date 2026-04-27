@@ -31,6 +31,7 @@
 		E02CC4262F9C1E25009C9A2A /* TCA_Architecture_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCA_Architecture_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E02CC4332F9C1E26009C9A2A /* TCA_Architecture_2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCA_Architecture_2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E02CC43D2F9C1E26009C9A2A /* TCA_Architecture_2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCA_Architecture_2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E06C315D2F9FED6100EA8FAF /* TCA_Architecture_2.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TCA_Architecture_2.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -87,6 +88,7 @@
 		E02CC41D2F9C1E25009C9A2A = {
 			isa = PBXGroup;
 			children = (
+				E06C315D2F9FED6100EA8FAF /* TCA_Architecture_2.xctestplan */,
 				E02CC4282F9C1E25009C9A2A /* TCA_Architecture_2 */,
 				E02CC4362F9C1E26009C9A2A /* TCA_Architecture_2Tests */,
 				E02CC4402F9C1E26009C9A2A /* TCA_Architecture_2UITests */,
