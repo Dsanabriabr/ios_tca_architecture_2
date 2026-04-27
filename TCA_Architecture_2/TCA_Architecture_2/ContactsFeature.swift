@@ -30,11 +30,12 @@ struct ContactsFeature {
             case confirmDeletion(id: Contact.ID )
         }
     }
+    @Dependency(\.uuid) var uuid
   var body: some ReducerOf<Self> {
     Reduce { state, action in
         switch action {
         case .addButtonTapped:
-            state.destination = .addContact(AddContactFeature.State(contact: Contact(id: UUID(), name: "")))
+            state.destination = .addContact(AddContactFeature.State(contact: Contact(id: uuid(), name: "")))
             return .none
         case .destination(.presented(.addContact(.delegate(.saveContact(let contact))))):
             state.contacts.append(contact)
