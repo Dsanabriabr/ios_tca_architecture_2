@@ -26,6 +26,7 @@ struct ContactsFeature {
         case addButtonTapped
         case destination(PresentationAction<Destination.Action>)
         case deleteButtonTapped(id: Contact.ID)
+        @CasePathable
         enum Alert: Equatable {
             case confirmDeletion(id: Contact.ID )
         }
@@ -41,13 +42,7 @@ struct ContactsFeature {
             state.contacts.append(contact)
             return .none
         case .deleteButtonTapped(id: let id):
-            state.destination = .alert(AlertState {
-                TextState("Are you sure?")
-            } actions: {
-                ButtonState(role: .destructive, action: .confirmDeletion(id: id)) {
-                    TextState("Delete")
-                }
-            }
+            state.destination = .alert(.deleteConfirmation(id: id)
           )
           return .none
       case .destination(.presented(.alert(.confirmDeletion(id: let id)))):
@@ -136,4 +131,15 @@ struct ContactsView: View {
       ContactsFeature()
     }
   )
+}
+extension AlertState where Action == ContactsFeature.Action.Alert {
+  static func deleteConfirmation(id: UUID) -> Self {
+    Self {
+      TextState("Are you sure?")
+    } actions: {
+      ButtonState(role: .destructive, action: .confirmDeletion(id: id)) {
+        TextState("Delete")
+      }
+    }
+  }
 }
