@@ -19,62 +19,66 @@ struct Contact: Equatable, Identifiable {
 struct ContactsFeature {
   @ObservableState
   struct State: Equatable {
-    @Presents var alert: AlertState<Action.Alert>?
-    @Presents var addContact: AddContactFeature.State?
+    @Presents var destination: Destination.State?
     var contacts: IdentifiedArrayOf<Contact> = []
   }
     enum Action {
         case addButtonTapped
-        case addContact(PresentationAction<AddContactFeature.Action>)
+        case destination(PresentationAction<Destination.Action>)
         case deleteButtonTapped(id: Contact.ID)
-        case alert(PresentationAction<Alert>)
         enum Alert: Equatable {
             case confirmDeletion(id: Contact.ID )
         }
     }
   var body: some ReducerOf<Self> {
     Reduce { state, action in
-      switch action {
-      case .addButtonTapped:
-          state.addContact = AddContactFeature.State(contact: Contact(id: UUID(), name: ""))
-        return .none
-      case .addContact(.presented(.delegate(.saveContact(let contact)))):
-          state.contacts.append(contact)
-          return .none
-      case .addContact(.dismiss):
-          return .none
-      case .addContact(.presented(.setName(_))):
-          return .none
-      case .addContact(.presented(.cancelButtonTapped)):
-          return .none
-      case .addContact(.presented(.saveButtonTapped)):
-          return .none
-      case .deleteButtonTapped(id: let id):
-          state.alert = AlertState {
+        switch action {
+        case .addButtonTapped:
+            state.destination = .addContact(AddContactFeature.State(contact: Contact(id: UUID(), name: "")))
+            return .none
+        case .destination(.presented(.addContact(.delegate(.saveContact(let contact))))):
+            state.contacts.append(contact)
+            return .none
+        case .deleteButtonTapped(id: let id):
+            state.destination = .alert(AlertState {
                 TextState("Are you sure?")
-              } actions: {
+            } actions: {
                 ButtonState(role: .destructive, action: .confirmDeletion(id: id)) {
-                  TextState("Delete")
+                    TextState("Delete")
                 }
-              }
+            }
+          )
           return .none
-      case .alert(.presented(.confirmDeletion(id: let id))):
+      case .destination(.presented(.alert(.confirmDeletion(id: let id)))):
           state.contacts.remove(id: id)
           return .none
-      case .alert(.dismiss):
+      case .destination(.dismiss):
+          return .none
+      case .destination(.presented(.addContact(.cancelButtonTapped))):
+          return .none
+      case .destination(.presented(.addContact(.saveButtonTapped))):
+          return .none
+      case .destination(.presented(.addContact(.setName(_)))):
           return .none
       }
-    }.ifLet(\.$addContact, action: \.addContact) {
-        AddContactFeature()
+    }.ifLet(\.$destination, action: \.destination) {
+        Destination.body
     }
-    .ifLet(\.$alert, action: \.alert)
   }
 }
+extension ContactsFeature {
+  @Reducer
+  enum Destination {
+    case addContact(AddContactFeature)
+    case alert(AlertState<ContactsFeature.Action.Alert>)
+  }
+}
+extension ContactsFeature.Destination.State: Equatable {}
 
 struct ContactsView: View {
   @Bindable var store: StoreOf<ContactsFeature>
     var addContactStore: Binding<StoreOf<AddContactFeature>?> {
-      $store.scope(state: \.addContact, action: \.addContact)
+        $store.scope(state: \.$destination, action: \.destination).addContact
     }
   var body: some View {
     NavigationStack {
@@ -108,7 +112,12 @@ struct ContactsView: View {
       NavigationStack {
         AddContactView(store: addContactStore)
       }
-    }.alert($store.scope(state: \.alert, action: \.alert))
+      }.alert(
+        $store.scope(state: \.$destination, action: \.destination).alert
+      ) { action in
+          guard let action = action else {return}
+          store.send(.destination(.presented(.alert(action))))
+      }
   }
 }
 
