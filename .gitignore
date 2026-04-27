@@ -1,6 +1,6 @@
 ### Xcode ###
 ## User settings
-TCA_Architecture_2/TCA_Architecture_2.xcodeproj/project.xcworkspace/xcuserdata/
+**/xcuserdata/
 
 ## Xcode 8 and earlier
 *.xcscmblueprint
@@ -14,5 +14,5 @@ TCA_Architecture_2/TCA_Architecture_2.xcodeproj/project.xcworkspace/xcuserdata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
-
+**/*.xcuserstate
 # End of .gitignore
