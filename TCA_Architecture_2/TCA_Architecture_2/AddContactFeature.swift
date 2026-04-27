@@ -19,6 +19,7 @@ struct AddContactFeature {
         case delegate(Delegate)
         case saveButtonTapped
         case setName(String)
+        @CasePathable
         enum Delegate: Equatable {
             case saveContact(Contact)
         }
