@@ -32,18 +32,16 @@ struct ContactsFeature {
       case .addButtonTapped:
           state.addContact = AddContactFeature.State(contact: Contact(id: UUID(), name: ""))
         return .none
-      case .addContact(.presented(.cancelButtonTapped)):
-          state.addContact = nil
+      case .addContact(.presented(.delegate(.saveContact(let contact)))):
+          state.contacts.append(contact)
           return .none
-      case .addContact(.presented(.saveButtonTapped)):
-              guard let contact = state.addContact?.contact
-              else { return .none }
-              state.contacts.append(contact)
-              state.addContact = nil
-              return .none
       case .addContact(.dismiss):
           return .none
       case .addContact(.presented(.setName(_))):
+          return .none
+      case .addContact(.presented(.cancelButtonTapped)):
+          return .none
+      case .addContact(.presented(.saveButtonTapped)):
           return .none
       }
     }.ifLet(\.$addContact, action: \.addContact) {
