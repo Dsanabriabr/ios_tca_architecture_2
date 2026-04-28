@@ -96,4 +96,34 @@ struct TCA_Architecture_2Tests {
             $0.destination = nil
         }
     }
+    
+    @Test func editContactNonExhaustive() async {
+        let contactId = UUID(1)
+        let contact = Contact(id: contactId, name: "Blob Jr.")
+        let store = TestStore(
+            initialState: ContactsFeature.State(
+                contacts: [
+                    Contact(id: UUID(0), name: "Blob"),
+                    contact,
+                ], path: StackState([
+                    ContactDetailFeature.State(contact: contact)
+                ])
+            )) {
+                ContactsFeature()
+            }
+        store.exhaustivity = .off
+        
+        await store.send(.path(.element(id: 0, action: .editButtonTapped)))
+        await store.send(.path(.element(id: 0, action: .destination(.presented(.editContact(.setName("Blob Father")))))))
+        await store.send(.path(.element(id: 0, action: .destination(.presented(.editContact(.saveButtonTapped))))))
+        await store.skipReceivedActions()
+        store.assert {
+            $0.path = StackState()
+            $0.contacts = [
+                Contact(id: UUID(0), name: "Blob"),
+                Contact(id: contactId, name: "Blob Father")
+            ]
+            $0.destination = nil
+        }
+    }
 }
