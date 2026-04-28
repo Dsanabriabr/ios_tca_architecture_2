@@ -14,7 +14,7 @@ import Testing
 @MainActor
 struct TCA_Architecture_2Tests {
 
-    @Test func addFlow() async throws {
+    @Test func addContact() async throws {
         let store = TestStore(initialState: ContactsFeature.State()) {
             ContactsFeature()
         } withDependencies: {
@@ -45,7 +45,7 @@ struct TCA_Architecture_2Tests {
             }
     }
     
-    @Test func addFlowNonExhaustive() async throws {
+    @Test func addContactNonExhaustive() async throws {
         let store = TestStore(initialState: ContactsFeature.State()) {
             ContactsFeature()
         } withDependencies: {
@@ -65,22 +65,31 @@ struct TCA_Architecture_2Tests {
         }
     }
 
-    @Test func deleteContact() async {
-    let store = TestStore(
-          initialState: ContactsFeature.State(
-            contacts: [
-              Contact(id: UUID(0), name: "Blob"),
-              Contact(id: UUID(1), name: "Blob Jr."),
-            ]
-          )
-        ) {
-          ContactsFeature()
-        }
+    @Test func deleteContactNonExhaustive() async {
+        let contactId = UUID(1)
+        let contact = Contact(id: contactId, name: "Blob Jr.")
+        let store = TestStore(
+            initialState: ContactsFeature.State(
+                contacts: [
+                    Contact(id: UUID(0), name: "Blob"),
+                    contact,
+                ], path: StackState([
+                    ContactDetailFeature.State(contact: contact)
+                ])
+            )) {
+                ContactsFeature()
+            }
+        store.exhaustivity = .off
         
-        await store.send(.deleteButtonTapped(id: UUID(1))) {
-            $0.destination = .alert(.deleteConfirmation(id: UUID(1)))
-        }
-        await store.send(\.destination.alert.confirmDeletion, UUID(1)) {
+        // 1. Nav (action on path by stack)
+        await store.send(.path(.element(id: 0, action: .deleteButtonTapped)))
+        // 2. Confirm alert no detail
+        await store.send(
+            .path(.element(id: 0, action: .destination(.presented(.alert(.confirmDeletion)))))
+        )
+        await store.skipReceivedActions()
+        store.assert {
+            $0.path = StackState()
             $0.contacts = [
                 Contact(id: UUID(0), name: "Blob")
             ]
