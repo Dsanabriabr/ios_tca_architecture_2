@@ -13,11 +13,11 @@ import SwiftUI
 struct ContactDetailFeature {
     @ObservableState
     struct State: Equatable {
-        let contact: Contact
-        @Presents var alert: AlertState<Action.Alert>?
+        var contact: Contact
+        @Presents var destination: Destination.State?
     }
     enum Action {
-        case alert(PresentationAction<Alert>)
+        case destination(PresentationAction<Destination.Action>)
         case delegate(Delegate)
         case deleteButtonTapped
         case editButtonTapped
@@ -26,51 +26,77 @@ struct ContactDetailFeature {
         }
         enum Delegate {
             case confirmDeletion
+            case editContact(Contact)
         }
     }
     @Dependency(\.dismiss) var dismiss
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .alert(.presented(.confirmDeletion)):
+            case .destination(.presented(.editContact(.delegate(.saveContact(let contact))))):
+                return .run { send in
+                    await send(.delegate(.editContact(contact)))
+                    await self.dismiss()
+                }
+            case .destination(.presented(.alert(.confirmDeletion))):
                 return .run { send in
                     await send(.delegate(.confirmDeletion))
                     await self.dismiss()
                 }
-            case .alert:
+            case .destination(.dismiss):
                 return .none
-            case .delegate:
+            case .destination(.presented(.editContact(.cancelButtonTapped))):
+                return .none
+            case .destination(.presented(.editContact(.saveButtonTapped))):
+                return .none
+            case .destination(.presented(.editContact(.setName(_)))):
+                return .none
+            case .destination(_):
+                return .none
+            case .delegate(_):
                 return .none
             case .deleteButtonTapped:
-                state.alert = .confirmDeletion
+                state.destination = .alert(.confirmDeletion)
                 return .none
             case .editButtonTapped:
-                
+                state.destination = .editContact(AddContactFeature.State(contact: state.contact))
                 return .none
             }
-        }.ifLet(\.$alert, action: \.alert)
+        }.ifLet(\.$destination, action: \.destination) {
+            Destination.body
+        }
     }
 }
 
 // MARK: - View
 struct ContactDetailView: View {
     @Bindable var  store: StoreOf<ContactDetailFeature>
-    
+    var editContactStore: Binding<StoreOf<AddContactFeature>?> {
+        $store.scope(state: \.$destination, action: \.destination).editContact
+    }
     var body: some View {
         Form {
-            Button("Delete") {
+            Button("Delete", systemImage: "trash") {
                 store.send(.deleteButtonTapped)
-            }
+            }.foregroundStyle(.red)
         }
         .navigationTitle(Text(store.contact.name))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Editar") {
-                    store.send(.deleteButtonTapped)
+                    store.send(.editButtonTapped)
                 }
             }
+        }.sheet(item: editContactStore) { editContactStore in
+            NavigationStack {
+                AddContactView(store: editContactStore)
+            }
+        }.alert($store.scope(state: \.$destination, action: \.destination).alert
+        ) { action in
+            guard let action = action else {return}
+            store.send(.destination(.presented(.alert(action))))
         }
-        .alert($store.scope(state: \.alert, action: \.alert))
+    
     }
 }
 
@@ -100,22 +126,12 @@ extension AlertState where Action == ContactDetailFeature.Action.Alert {
     }
 }
 
-struct AlertEditNameView: View {
-    @State private var presentAlert = false
-    @State private var name: String = ""
-    
-    var body: some View {
-        Button("Show Alert") {
-            presentAlert = true
-        }
-        .alert("Username", isPresented: $presentAlert, actions: {
-            TextField("Username", text: $name)
-
-            
-            Button("Edit", action: {})
-            Button("Cancel", role: .cancel, action: {})
-        }, message: {
-            Text("Please update the username.")
-        })
+// MARK: - Destination
+extension ContactDetailFeature {
+    @Reducer
+    enum Destination {
+        case editContact(AddContactFeature)
+        case alert(AlertState<ContactDetailFeature.Action.Alert>)
     }
 }
+extension ContactDetailFeature.Destination.State: Equatable {}
