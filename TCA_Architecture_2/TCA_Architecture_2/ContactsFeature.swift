@@ -58,6 +58,10 @@ struct ContactsFeature {
                 else { return .none }
                 state.contacts.remove(id: detailState.contact.id)
                 return .none
+            case let .path(.element(id: id, action: .delegate(.editContact(contact)))):
+                guard state.path[id: id] != nil else { return .none }
+                state.contacts[id: contact.id] = contact
+                return .none
             case .path:
                 return .none
             }
@@ -91,8 +95,8 @@ struct ContactsView: View {
                         HStack {
                             Text(contact.name)
                             Spacer()
-                            Image(systemName: "trash")
-                                .foregroundStyle(Color.red)
+                            Image(systemName: "pencil.and.list.clipboard")
+                                .foregroundStyle(Color.blue)
                         }
                     }
                     .buttonStyle(.borderless)
