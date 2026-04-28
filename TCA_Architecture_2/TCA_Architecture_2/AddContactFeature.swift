@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import SwiftUI
 
+// MARK: - Feature
 @Reducer
 struct AddContactFeature {
     @ObservableState
@@ -30,15 +31,14 @@ struct AddContactFeature {
             switch action {
             case .cancelButtonTapped:
                 return .run { _ in await self.dismiss()}
-                
             case .saveButtonTapped:
                 return .run { [contact = state.contact] send in
-                  await send(.delegate(.saveContact(contact)))
-                  await self.dismiss()
+                    await send(.delegate(.saveContact(contact)))
+                    await self.dismiss()
                 }
             case let .setName(name):
                 state.contact.name = name
-                return .none
+                return .none                
             case .delegate(_):
                 return .none
             }
@@ -46,6 +46,7 @@ struct AddContactFeature {
     }
 }
 
+// MARK: - View
 struct AddContactView: View {
     @Bindable var store: StoreOf<AddContactFeature>
     
@@ -65,6 +66,7 @@ struct AddContactView: View {
     }
 }
 
+// MARK: - Preview
 #Preview {
     NavigationStack {
         AddContactView(
