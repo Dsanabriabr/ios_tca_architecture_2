@@ -26,24 +26,26 @@ This repository serves as:
 ---
 
 <html> 
-<div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">    
-    <div style="text-align: center;">
-    <img src="images/Create_Contact_TCA.gif" width="200" alt="Create">
-    <p>Create</p>
-    </div>
-    <div style="text-align: center;">
-    <img src="images/Read_Contact_TCA.gif" width="200" alt="Read">
-    <p>Read</p>
-    </div>
-    <div style="text-align: center;">
-    <img src="images/Update_Contact_TCA.gif" width="200" alt="Update">
-    <p>Update</p>
-    </div>
-    <div style="text-align: center;">
-    <img src="images/Delete_Contact_TCA.gif" width="200" alt="Delete">
-    <p>Delete</p>
-    </div>
-</div>
+<table>
+  <tr>
+    <td align="center">
+      <img src="images/Create_Contact_TCA.gif" width="200" alt="Create"><br>
+      Create
+    </td>
+    <td align="center">
+      <img src="images/Read_Contact_TCA.gif" width="200" alt="Read"><br>
+      Read
+    </td>
+    <td align="center">
+      <img src="images/Update_Contact_TCA.gif" width="200" alt="Update"><br>
+      Update
+    </td>
+    <td align="center">
+      <img src="images/Delete_Contact_TCA.gif" width="200" alt="Delete"><br>
+      Delete
+    </td>
+  </tr>
+</table>
 </html>
 
 ## Overview
