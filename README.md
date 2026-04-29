@@ -25,28 +25,9 @@ This repository serves as:
 
 ---
 
-<html> 
-<table>
-  <tr>
-    <td align="center">
-      <img src="images/Create_Contact_TCA.gif" width="200" alt="Create"><br>
-      Create
-    </td>
-    <td align="center">
-      <img src="images/Read_Contact_TCA.gif" width="200" alt="Read"><br>
-      Read
-    </td>
-    <td align="center">
-      <img src="images/Update_Contact_TCA.gif" width="200" alt="Update"><br>
-      Update
-    </td>
-    <td align="center">
-      <img src="images/Delete_Contact_TCA.gif" width="200" alt="Delete"><br>
-      Delete
-    </td>
-  </tr>
-</table>
-</html>
+| Create | Read | Update | Delete |
+|--------|------|--------|--------|
+| <img src="images/Create_Contact_TCA.gif" width="200"> | <img src="images/Read_Contact_TCA.gif" width="200"> | <img src="images/Update_Contact_TCA.gif" width="200"> | <img src="images/Delete_Contact_TCA.gif" width="200"> |
 
 ## Overview
 
